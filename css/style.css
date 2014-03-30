@@ -1,6 +1,7 @@
-#currentinfo-top {
-  font-weight: bold;
-  font-size: 15px;
+@media screen and (max-width: 767px) {
+  .content {
+    padding-top: 50px;
+  }
 }
 
 #searchfield > button{
@@ -9,4 +10,9 @@
 
 #searchfield > input{
   width: calc(100% - 50px);
+}
+
+.currentinfo-top {
+  font-weight: bold;
+  font-size: 15px;
 }
