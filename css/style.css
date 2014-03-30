@@ -1,6 +1,13 @@
-@media screen and (max-width: 767px) {
+.visible-portrait-xs {
+  display: none;
+}
+
+@media screen and (max-width: 767px) and (orientation:portrait) {
   .content {
     padding-top: 50px;
+  }
+  .visible-portrait-xs {
+    display: block;
   }
 }
 
