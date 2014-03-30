@@ -10,12 +10,21 @@ Mops.model = {
 }
 
 Mops.Router.map(function() {
-  this.resource('index', { path: '/' });
+  this.resource('index', { path: '/' }, function(){
+    this.resource('tracklist');
+  });
+});
+
+Mops.TracklistRoute = Ember.Route.extend({
+  model: function(){ return Mops.model },
 });
 
 Mops.IndexRoute = Ember.Route.extend({
   model: function(){ return Mops.model },
-  
+  beforeModel: function() {
+    // redirect / to tracklist route
+    this.transitionTo('tracklist');
+  }
 });
 
 Mops.IndexController = Ember.ObjectController.extend({
