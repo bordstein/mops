@@ -25,3 +25,5 @@ Mops.IndexController = Ember.ObjectController.extend({
     }
   }
 });
+
+Mops.mopidy = new Mopidy();
