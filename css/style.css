@@ -2,3 +2,11 @@
   font-weight: bold;
   font-size: 15px;
 }
+
+#searchfield > button{
+  float: right;
+}
+
+#searchfield > input{
+  width: calc(100% - 50px);
+}
