@@ -1,14 +1,4 @@
-.navbar-brand {
-    position: absolute;
-    width: 100%;
-    left: 0;
-    text-align: center;
-    margin: auto;
-    z-index: -1;
-}
-
-.navbar-brand .brand-inner {
-    width: 600px;
-    text-align: center;
-    margin: auto;
+#currentinfo-top {
+  font-weight: bold;
+  font-size: 15px;
 }
