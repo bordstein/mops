@@ -65,35 +65,37 @@
           <p class="pull-left visible-xs">
             <button type="button" id="sidebar-button" class="btn btn-primary
               btn-xs" data-toggle="offcanvas" {{action "toggleOffcanvas"}}>Toggle nav</button>
-   
           </p>
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th></th>
-                <th>Track</th>
-                <th>Title</th>
-                <th>Artist</th>
-                <th>Album</th>
-                <th>Time</th>
-              <tr>
-            </thead>
-            <tbody>
-              {{#each tracklist}}
-              <tr>
-                <td></td>
-                <td>{{track}}</td>
-                <td>{{title}}</td>
-                <td>{{artist}}</td>
-                <td>{{album}}</td>
-                <td>{{duration}}</td>
-              </tr>
-              {{/each}}
-            </tbody>
-          </table>
+          {{outlet}}
         </div> <!--/span-->
       </div> <!--/row-->
     </div> <!--/.container-->
+    </script>
+    <script type="text/x-handlebars" data-template-name="tracklist">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Track</th>
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Album</th>
+            <th>Time</th>
+          <tr>
+        </thead>
+        <tbody>
+          {{#each tracklist}}
+          <tr>
+            <td></td>
+            <td>{{track}}</td>
+            <td>{{title}}</td>
+            <td>{{artist}}</td>
+            <td>{{album}}</td>
+            <td>{{duration}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
     </script>
     <script type="text/javascript" src="/mopidy/mopidy.min.js"></script>
     <script src="js/libs/jquery-1.11.0.js"></script>
