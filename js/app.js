@@ -9,6 +9,9 @@ Mops.model = {
     "playlists": []
 }
 
+Mops.Track = Ember.Object.extend({
+});
+
 Mops.Router.map(function() {
   this.resource('index', { path: '/' }, function(){
     this.resource('tracklist');
@@ -50,12 +53,13 @@ Mops.mopidy.on("state:online", function() {
     Mops.mopidy.tracklist.getTracks().then(function(tracklist) {
         Mops.tracklist_orig = tracklist;
         tracklist.map(function(track) {
-            Mops.model.tracklist.addObject({
-                "artist": track.artists[0].name,
-                "title": track.name,
-                "album": track.album.name,
-                "duration": millisecondsToTime(track.length)
-            });
+	    Mops.model.tracklist.addObject(
+		    Mops.Track.create({
+		"artist": track.artists[0].name,
+		"title": track.name,
+		"album": track.album.name,
+		"duration": millisecondsToTime(track.length)
+	    }));
         });
     });
 });
