@@ -1,3 +1,13 @@
+Ember.Handlebars.helper('get_playicon', function(state) {
+    console.log(state);
+    if(state == "playing")
+        return new Handlebars.SafeString('<span class="glyphicon glyphicon-play"/>');
+    else if(state == "paused")
+        return new Handlebars.SafeString('<span class="glyphicon glyphicon-pause"/>');
+    else
+        return "";
+});
+
 Mops = Ember.Application.create();
 
 Mops.model = {
@@ -53,13 +63,19 @@ Mops.mopidy.on("state:online", function() {
     Mops.mopidy.tracklist.getTracks().then(function(tracklist) {
         Mops.tracklist_orig = tracklist;
         tracklist.map(function(track) {
-	    Mops.model.tracklist.addObject(
-		    Mops.Track.create({
-		"artist": track.artists[0].name,
-		"title": track.name,
-		"album": track.album.name,
-		"duration": millisecondsToTime(track.length)
-	    }));
+          Mops.model.tracklist.addObject(
+            Mops.Track.create({
+              "artist": track.artists[0].name,
+              "title": track.name,
+              "album": track.album.name,
+              "state": "-",
+              "duration": millisecondsToTime(track.length)
+          }));
+        });
+        Mops.mopidy.playback.getState().then(function(state) {
+          Mops.mopidy.playback.getCurrentTlTrack().then(function(track) {
+            Mops.model.tracklist[track.tlid].set("state", state);
+          });
         });
     });
 });
