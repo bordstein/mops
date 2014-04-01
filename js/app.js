@@ -50,6 +50,12 @@ Mops.IndexController = Ember.ObjectController.extend({
             Mops.mopidy.playback.pause()
         else
             Mops.mopidy.playback.play()
+    },
+    forward: function() {
+        Mops.mopidy.playback.next()
+    },
+    backward: function() {
+        Mops.mopidy.playback.previous()
     }
   }
 });

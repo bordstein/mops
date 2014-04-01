@@ -15,13 +15,13 @@
             {{currentTrack.artist}} - {{currentTrack.title}}
         </div>
         <div class="navbar-header">
-          <button type="button" class="btn btn-default navbar-btn">
+          <button type="button" class="btn btn-default navbar-btn" {{action "backward"}}>
                   <span class="glyphicon glyphicon-fast-backward"/>
                  </button>
           <button type="button" class="btn btn-default navbar-btn" {{action "playPause"}}>
           <span {{bind-attr class="glyphicon" class=":glyphicon playing:glyphicon-pause:glyphicon-play"}} />
           </button>
-          <button type="button" class="btn btn-default navbar-btn">
+          <button type="button" class="btn btn-default navbar-btn" {{action "forward"}}>
           <span class="glyphicon glyphicon-fast-forward"/>
           </button>
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
