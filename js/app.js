@@ -10,6 +10,7 @@ Ember.Handlebars.helper('get_playicon', function(state) {
 Mops = Ember.Application.create();
 
 Mops.model = {
+    'playing':false,
     "currentTrack": {
         "artist": "",
         "title": ""
@@ -43,6 +44,12 @@ Mops.IndexController = Ember.ObjectController.extend({
   actions: {
     toggleOffcanvas: function() {
         $('.row-offcanvas').toggleClass('active')
+    },
+    playPause: function() {
+        if(Mops.model.playing)
+            Mops.mopidy.playback.pause()
+        else
+            Mops.mopidy.playback.play()
     }
   }
 });
@@ -66,12 +73,25 @@ Mops.mopidy.on("state:online", function() {
             trackify(track));
         });
         Mops.mopidy.playback.getState().then(function(state) {
+          if(state == 'playing')
+              Ember.set(Mops.model, 'playing', true);
+          else
+              Ember.set(Mops.model, 'playing', false);
           Mops.mopidy.playback.getCurrentTlTrack().then(function(track) {
             Mops.model.tracklist[track.tlid].set("state", state);
           });
         });
     });
 });
+
+Mops.mopidy.on("event:playbackStateChanged", function(state) {
+    if(state.new_state == 'playing')
+        Ember.set(Mops.model, 'playing', true);
+    else
+        Ember.set(Mops.model, 'playing', false);
+})
+
+// Mops.mopidy.on(console.log.bind(console)); 
 
 Mops.mopidy.on("event:trackPlaybackPaused", function(data){
   console.log("paused>>");
