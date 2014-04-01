@@ -1,5 +1,4 @@
 Ember.Handlebars.helper('get_playicon', function(state) {
-    console.log(state);
     if(state == "playing")
         return new Handlebars.SafeString('<span class="glyphicon glyphicon-play"/>');
     else if(state == "paused")
@@ -64,13 +63,7 @@ Mops.mopidy.on("state:online", function() {
         Mops.tracklist_orig = tracklist;
         tracklist.map(function(track) {
           Mops.model.tracklist.addObject(
-            Mops.Track.create({
-              "artist": track.artists[0].name,
-              "title": track.name,
-              "album": track.album.name,
-              "state": "-",
-              "duration": millisecondsToTime(track.length)
-          }));
+            trackify(track));
         });
         Mops.mopidy.playback.getState().then(function(state) {
           Mops.mopidy.playback.getCurrentTlTrack().then(function(track) {
@@ -78,4 +71,24 @@ Mops.mopidy.on("state:online", function() {
           });
         });
     });
+});
+
+Mops.mopidy.on("event:trackPlaybackPaused", function(data){
+  console.log("paused>>");
+  replaceTrackWithState(data, "paused");
+});
+
+Mops.mopidy.on("event:trackPlaybackResumed", function(data){
+  console.log("resumed>>");
+  replaceTrackWithState(data, "playing");
+});
+
+Mops.mopidy.on("event:trackPlaybackStarted", function(data){
+  console.log("started>>");
+  replaceTrackWithState(data, "playing");
+});
+
+Mops.mopidy.on("event:trackPlaybackEnded", function(data){
+  console.log("stopped>>");
+  replaceTrackWithState(data, "stopped");
 });
