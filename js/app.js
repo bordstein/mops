@@ -76,13 +76,7 @@ Mops.mopidy.on("state:online", function() {
         Mops.tracklist_orig = tracklist;
         tracklist.map(function(track) {
           Mops.model.tracklist.addObject(
-            Mops.Track.create({
-              "artist": track.artists[0].name,
-              "title": track.name,
-              "album": track.album.name,
-              "state": "-",
-              "duration": millisecondsToTime(track.length)
-          }));
+            trackify(track));
         });
         Mops.mopidy.playback.getState().then(function(state) {
           if(state == 'playing')
@@ -104,3 +98,23 @@ Mops.mopidy.on("event:playbackStateChanged", function(state) {
 })
 
 // Mops.mopidy.on(console.log.bind(console)); 
+
+Mops.mopidy.on("event:trackPlaybackPaused", function(data){
+  console.log("paused>>");
+  replaceTrackWithState(data, "paused");
+});
+
+Mops.mopidy.on("event:trackPlaybackResumed", function(data){
+  console.log("resumed>>");
+  replaceTrackWithState(data, "playing");
+});
+
+Mops.mopidy.on("event:trackPlaybackStarted", function(data){
+  console.log("started>>");
+  replaceTrackWithState(data, "playing");
+});
+
+Mops.mopidy.on("event:trackPlaybackEnded", function(data){
+  console.log("stopped>>");
+  replaceTrackWithState(data, "stopped");
+});
