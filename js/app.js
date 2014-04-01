@@ -44,6 +44,12 @@ Mops.IndexController = Ember.ObjectController.extend({
   actions: {
     toggleOffcanvas: function() {
         $('.row-offcanvas').toggleClass('active')
+    },
+    playPause: function() {
+        if(Mops.model.playing)
+            Mops.mopidy.playback.pause()
+        else
+            Mops.mopidy.playback.play()
     }
   }
 });
