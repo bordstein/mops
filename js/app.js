@@ -16,7 +16,8 @@ Mops.model = {
         "title": ""
     },
     "tracklist": [],
-    "playlists": []
+    "playlists": [],
+    tlid_links: {}
 }
 
 Mops.Track = Ember.Object.extend({
@@ -72,11 +73,11 @@ Mops.mopidy.on("state:online", function() {
             Mops.model.playlists.addObject(playlist.name);
         });
     });
-    Mops.mopidy.tracklist.getTracks().then(function(tracklist) {
-        Mops.tracklist_orig = tracklist;
+    Mops.mopidy.tracklist.getTlTracks().then(function(tracklist) {
         tracklist.map(function(track) {
-          Mops.model.tracklist.addObject(
-            trackify(track));
+          tmp = trackify(track.track);
+          Mops.model.tracklist.addObject(tmp);
+          Mops.model.tlid_links[track.tlid] = tmp;
         });
         Mops.mopidy.playback.getState().then(function(state) {
           if(state == 'playing')
@@ -84,7 +85,7 @@ Mops.mopidy.on("state:online", function() {
           else
               Ember.set(Mops.model, 'playing', false);
           Mops.mopidy.playback.getCurrentTlTrack().then(function(track) {
-            Mops.model.tracklist[track.tlid].set("state", state);
+            Mops.model.tlid_links[track.tlid].set("state", state);
           });
         });
     });
@@ -100,21 +101,17 @@ Mops.mopidy.on("event:playbackStateChanged", function(state) {
 // Mops.mopidy.on(console.log.bind(console)); 
 
 Mops.mopidy.on("event:trackPlaybackPaused", function(data){
-  console.log("paused>>");
-  replaceTrackWithState(data, "paused");
+  Mops.model.tlid_links[data.tl_track.tlid].set('state','paused')
 });
 
 Mops.mopidy.on("event:trackPlaybackResumed", function(data){
-  console.log("resumed>>");
-  replaceTrackWithState(data, "playing");
+  Mops.model.tlid_links[data.tl_track.tlid].set('state','playing')
 });
 
 Mops.mopidy.on("event:trackPlaybackStarted", function(data){
-  console.log("started>>");
-  replaceTrackWithState(data, "playing");
+  Mops.model.tlid_links[data.tl_track.tlid].set('state','playing')
 });
 
 Mops.mopidy.on("event:trackPlaybackEnded", function(data){
-  console.log("stopped>>");
-  replaceTrackWithState(data, "stopped");
+  Mops.model.tlid_links[data.tl_track.tlid].set('state','stopped')
 });

@@ -11,15 +11,7 @@ function trackify(mopidyTrack) {
               "artist": mopidyTrack.artists[0].name,
               "title": mopidyTrack.name,
               "album": mopidyTrack.album.name,
-              "state": mopidyTrack.state,
+              "state": '',
               "duration": millisecondsToTime(mopidyTrack.length)
   });
-}
-
-function replaceTrackWithState(data, state) {
-  var tlid = data.tl_track.tlid;
-  var track = trackify(data.tl_track.track);
-  track.set("state", state);
-  console.log("started>>");
-  Mops.model.tracklist.replace(tlid, 1, [track]);
 }
