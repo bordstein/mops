@@ -73,6 +73,19 @@ Mops.updatePlaylists = function(){
     });
 }
 
+Mops.updateCurrentSongInfo = function(state){
+  Mops.mopidy.playback.getCurrentTlTrack().then(function(track) {
+    if (track == null){
+      Mops.set('model.currentTrack.artist', "");
+      Mops.set('model.currentTrack.title', "");
+    } else {
+      Mops.model.tlid_links[track.tlid].set("state", state);
+      Mops.set('model.currentTrack.artist', track.track.artists[0].name);
+      Mops.set('model.currentTrack.title', track.track.name);
+    }
+  });
+}
+
 Mops.updateTracks = function(){
     Mops.mopidy.tracklist.getTlTracks().then(function(tracklist) {
         Mops.model.tlid_links = {}
@@ -106,11 +119,7 @@ Mops.updateTracks = function(){
               Ember.set(Mops.model, 'playing', true);
           else
               Ember.set(Mops.model, 'playing', false);
-          Mops.mopidy.playback.getCurrentTlTrack().then(function(track) {
-            Mops.model.tlid_links[track.tlid].set("state", state);
-            Mops.set('model.currentTrack.artist', track.track.artists[0].name);
-            Mops.set('model.currentTrack.title', track.track.name);
-          });
+          Mops.updateCurrentSongInfo(state);
         });
     });
 };
@@ -145,6 +154,7 @@ Mops.mopidy.on("event:trackPlaybackStarted", function(data){
   latest_tlid = data.tl_track.tlid;
   Mops.model.latest_tlid = latest_tlid;
   Mops.model.tlid_links[latest_tlid].set('state','playing');
+  Mops.updateCurrentSongInfo("playing");
 });
 
 Mops.mopidy.on("event:trackPlaybackEnded", function(data){
