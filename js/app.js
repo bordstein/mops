@@ -8,6 +8,7 @@ Ember.Handlebars.helper('get_playicon', function(state) {
 });
 
 Mops = Ember.Application.create();
+Mops.debounceContext = {name: 'debounce'};
 
 Mops.model = {
     'playing':false,
@@ -152,5 +153,5 @@ Mops.mopidy.on("event:trackPlaybackEnded", function(data){
 });
 
 Mops.mopidy.on("event:tracklistChanged", function(){
-  Mops.updateTracks();
+  Ember.run.debounce(Mops.debounceContext, Mops.updateTracks, 1000);
 });
