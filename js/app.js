@@ -64,7 +64,7 @@ Mops.IndexController = Ember.ObjectController.extend({
 
 Mops.mopidy = new Mopidy();
 
-Mops.mopidy.on("state:online", function() {
+Mops.updateTracks = function(){
     Mops.mopidy.playback.getCurrentTrack().then(function(track) {
         Mops.set('model.currentTrack.artist', track.artists[0].name);
         Mops.set('model.currentTrack.title', track.name);
@@ -75,6 +75,7 @@ Mops.mopidy.on("state:online", function() {
         });
     });
     Mops.mopidy.tracklist.getTlTracks().then(function(tracklist) {
+        Mops.model.tracklist.clear();
         tracklist.map(function(track) {
           tmp = trackify(track.track);
           Mops.model.tracklist.addObject(tmp);
@@ -90,6 +91,10 @@ Mops.mopidy.on("state:online", function() {
           });
         });
     });
+};
+
+Mops.mopidy.on("state:online", function() {
+  Mops.updateTracks();
 });
 
 Mops.mopidy.on("event:playbackStateChanged", function(state) {
@@ -112,13 +117,17 @@ Mops.mopidy.on("event:trackPlaybackResumed", function(data){
 Mops.mopidy.on("event:trackPlaybackStarted", function(data){
   var latest_tlid = Mops.model.latest_tlid;
   if (latest_tlid != -1 && latest_tlid in Mops.model.tlid_links){
-    Mops.model.tlid_links[latest_tlid].set('state','stopped')
+    Mops.model.tlid_links[latest_tlid].set('state','stopped');
   }
   latest_tlid = data.tl_track.tlid;
   Mops.model.latest_tlid = latest_tlid;
-  Mops.model.tlid_links[latest_tlid].set('state','playing')
+  Mops.model.tlid_links[latest_tlid].set('state','playing');
 });
 
 Mops.mopidy.on("event:trackPlaybackEnded", function(data){
-  Mops.model.tlid_links[data.tl_track.tlid].set('state','stopped')
+  Mops.model.tlid_links[data.tl_track.tlid].set('state','stopped');
+});
+
+Mops.mopidy.on("event:tracklistChanged", function(){
+  Mops.updateTracks();
 });
