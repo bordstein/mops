@@ -17,7 +17,8 @@ Mops.model = {
     },
     "tracklist": [],
     "playlists": [],
-    tlid_links: {}
+    tlid_links: {},
+    latest_tlid: -1
 }
 
 Mops.Track = Ember.Object.extend({
@@ -109,7 +110,13 @@ Mops.mopidy.on("event:trackPlaybackResumed", function(data){
 });
 
 Mops.mopidy.on("event:trackPlaybackStarted", function(data){
-  Mops.model.tlid_links[data.tl_track.tlid].set('state','playing')
+  var latest_tlid = Mops.model.latest_tlid;
+  if (latest_tlid != -1 && latest_tlid in Mops.model.tlid_links){
+    Mops.model.tlid_links[latest_tlid].set('state','stopped')
+  }
+  latest_tlid = data.tl_track.tlid;
+  Mops.model.latest_tlid = latest_tlid;
+  Mops.model.tlid_links[latest_tlid].set('state','playing')
 });
 
 Mops.mopidy.on("event:trackPlaybackEnded", function(data){
