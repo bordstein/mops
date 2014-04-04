@@ -75,12 +75,33 @@ Mops.updateTracks = function(){
         });
     });
     Mops.mopidy.tracklist.getTlTracks().then(function(tracklist) {
-        Mops.model.tracklist.clear();
-        tracklist.map(function(track) {
-          tmp = trackify(track.track);
-          Mops.model.tracklist.addObject(tmp);
-          Mops.model.tlid_links[track.tlid] = tmp;
-        });
+        Mops.model.tlid_links = {}
+        // update items in-place to avoid browser reflow
+        // and loosing scroll position
+        for (var i=0; i<tracklist.length; i++) { 
+          var track = tracklist[i].track;
+          var tlid = tracklist[i].tlid;
+          var tmp = trackify(track);
+          if (i < Mops.model.tracklist.length){
+            //Mops.model.tracklist.replace(i, 1, [tmp]);
+            var flip = Mops.model.tracklist.objectAt(i);
+            flip.set("artist", tmp.artist);
+            flip.set("title", tmp.title);
+            flip.set("album", tmp.album);
+            flip.set("state", tmp.state);
+            flip.set("duration", tmp.duration);
+            Mops.model.tlid_links[tlid] = flip;
+          } else {
+            Mops.model.tracklist.addObject(tmp);
+            Mops.model.tlid_links[tlid] = tmp;
+          }
+          // clear superfluous items at the end if the new tracklist
+          // is shorter than the old one
+          if (Mops.model.tracklist.length > tracklist.length){
+            Mops.model.tracklist.removeAt(tracklist.length,
+              Mops.model.tracklist.length - tracklist.length);
+          }
+        }
         Mops.mopidy.playback.getState().then(function(state) {
           if(state == 'playing')
               Ember.set(Mops.model, 'playing', true);
