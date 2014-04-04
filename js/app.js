@@ -83,7 +83,6 @@ Mops.updateTracks = function(){
           var tlid = tracklist[i].tlid;
           var tmp = trackify(track);
           if (i < Mops.model.tracklist.length){
-            //Mops.model.tracklist.replace(i, 1, [tmp]);
             var flip = Mops.model.tracklist.objectAt(i);
             flip.set("artist", tmp.artist);
             flip.set("title", tmp.title);
@@ -146,7 +145,10 @@ Mops.mopidy.on("event:trackPlaybackStarted", function(data){
 });
 
 Mops.mopidy.on("event:trackPlaybackEnded", function(data){
-  Mops.model.tlid_links[data.tl_track.tlid].set('state','stopped');
+  var track = Mops.model.tlid_links[data.tl_track.tlid];
+  if (track != undefined){
+    track.set('state','stopped');
+  }
 });
 
 Mops.mopidy.on("event:tracklistChanged", function(){
