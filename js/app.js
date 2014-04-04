@@ -65,12 +65,15 @@ Mops.IndexController = Ember.ObjectController.extend({
 
 Mops.mopidy = new Mopidy();
 
-Mops.updateTracks = function(){
+Mops.updatePlaylists = function(){
     Mops.mopidy.playlists.getPlaylists().then(function(playlists) {
         playlists.map(function(playlist) {
             Mops.model.playlists.addObject(playlist.name);
         });
     });
+}
+
+Mops.updateTracks = function(){
     Mops.mopidy.tracklist.getTlTracks().then(function(tracklist) {
         Mops.model.tlid_links = {}
         // update items in-place to avoid browser reflow
@@ -114,6 +117,7 @@ Mops.updateTracks = function(){
 
 Mops.mopidy.on("state:online", function() {
   Mops.updateTracks();
+  Mops.updatePlaylists();
 });
 
 Mops.mopidy.on("event:playbackStateChanged", function(state) {
