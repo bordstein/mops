@@ -140,6 +140,7 @@ Mops.mopidy.on("event:playbackStateChanged", function(state) {
 
 Mops.mopidy.on("event:trackPlaybackPaused", function(data){
   Mops.model.tlid_links[data.tl_track.tlid].set('state','paused')
+  Mops.updateCurrentSongInfo("paused");
 });
 
 Mops.mopidy.on("event:trackPlaybackResumed", function(data){
