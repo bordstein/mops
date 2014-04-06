@@ -60,7 +60,8 @@
             <a href="#" class="list-group-item">{{playlist}}</a>
             {{/each}}
           </div>
-          <img id="coverimg" {{bind-attr src="currentTrack.coverUrl"}} />
+          <img id="coverimg" {{bind-attr src="currentTrack.coverUrl"}}
+          onerror="this.src='img/cover-default.png'"/>
         </div>
         <div class="col-xs-12 col-sm-9">
           <p class="pull-left visible-xs">
