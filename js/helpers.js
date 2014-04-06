@@ -12,6 +12,7 @@ function trackify(mopidyTrack) {
               "title": mopidyTrack.name,
               "album": mopidyTrack.album.name,
               "state": '',
-              "duration": millisecondsToTime(mopidyTrack.length)
+              "duration": millisecondsToTime(mopidyTrack.length),
+              "album_mbid": mopidyTrack.album.musicbrainz_id
   });
 }

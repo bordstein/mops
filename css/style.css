@@ -28,3 +28,7 @@
   width: 16px;
   padding-left: 4px;
 }
+
+#coverimg {
+  max-width: 100%;
+}

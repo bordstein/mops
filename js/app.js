@@ -12,14 +12,11 @@ Mops.debounceContext = {name: 'debounce'};
 
 Mops.model = {
     'playing':false,
-    "currentTrack": {
-        "artist": "",
-        "title": ""
-    },
     "tracklist": [],
     "playlists": [],
     tlid_links: {},
-    latest_tlid: -1
+    latest_tlid: -1,
+    currentTrack: null
 }
 
 Mops.Track = Ember.Object.extend({
@@ -30,7 +27,11 @@ Mops.Track = Ember.Object.extend({
       } else {
         return "";
       }
-  }.property("state")
+  }.property("state"),
+  coverUrl: function(){
+      var albumMbid = this.get("album_mbid");
+      return "http://coverartarchive.org/release/" + albumMbid + "/front"
+  }.property("album_mbid")
 });
 
 Mops.Router.map(function() {
@@ -84,12 +85,11 @@ Mops.updatePlaylists = function(){
 Mops.updateCurrentSongInfo = function(state){
   Mops.mopidy.playback.getCurrentTlTrack().then(function(track) {
     if (track == null){
-      Mops.set('model.currentTrack.artist', "");
-      Mops.set('model.currentTrack.title', "");
+      Mops.set('model.currentTrack', null);
     } else {
-      Mops.model.tlid_links[track.tlid].set("state", state);
-      Mops.set('model.currentTrack.artist', track.track.artists[0].name);
-      Mops.set('model.currentTrack.title', track.track.name);
+      var currentTrack = Mops.model.tlid_links[track.tlid];
+      currentTrack.set("state", state);
+      Mops.set('model.currentTrack', currentTrack);
     }
   });
 }
@@ -110,6 +110,7 @@ Mops.updateTracks = function(){
             flip.set("album", tmp.album);
             flip.set("state", tmp.state);
             flip.set("duration", tmp.duration);
+            flip.set("album_mbid", tmp.album_mbid);
             Mops.model.tlid_links[tlid] = flip;
           } else {
             Mops.model.tracklist.addObject(tmp);
