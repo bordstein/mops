@@ -1,4 +1,4 @@
-function millisecondsToTime(milli) {
+Mops.millisecondsToTime = function(milli){
     var seconds = parseInt((milli / 1000) % 60);
     var minutes = parseInt((milli / (60 * 1000)) % 60);
     if (seconds.toString().length == 1)
@@ -6,13 +6,13 @@ function millisecondsToTime(milli) {
     return minutes + ":" + seconds;
 }
 
-function trackify(mopidyTrack) {
+Mops.trackify = function(mopidyTrack) {
   return Mops.Track.create({
               "artist": mopidyTrack.artists[0].name,
               "title": mopidyTrack.name,
               "album": mopidyTrack.album.name,
               "state": '',
-              "duration": millisecondsToTime(mopidyTrack.length),
+              "duration": Mops.millisecondsToTime(mopidyTrack.length),
               "album_mbid": mopidyTrack.album.musicbrainz_id
   });
 }

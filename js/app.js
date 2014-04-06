@@ -102,7 +102,7 @@ Mops.updateTracks = function(){
         for (var i=0; i<tracklist.length; i++) { 
           var track = tracklist[i].track;
           var tlid = tracklist[i].tlid;
-          var tmp = trackify(track);
+          var tmp = Mops.trackify(track);
           if (i < Mops.model.tracklist.length){
             var flip = Mops.model.tracklist.objectAt(i);
             flip.set("artist", tmp.artist);
