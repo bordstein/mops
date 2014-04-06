@@ -83,14 +83,14 @@
             <th>Time</th>
           <tr>
         </thead>
-        <tbody>
-          {{#each tracklist}}
-          <tr>
-            <td><div class="playicon-wrapper">{{get_playicon state}}</div></td>
-            <td>{{title}}</td>
-            <td>{{artist}}</td>
-            <td>{{album}}</td>
-            <td>{{duration}}</td>
+        <tbody class="tracklist">
+          {{#each track in tracklist}}
+          <tr {{bind-attr class="track.getActive"}}>
+            <td><div class="playicon-wrapper">{{get_playicon track.state}}</div></td>
+            <td>{{track.title}}</td>
+            <td>{{track.artist}}</td>
+            <td>{{track.album}}</td>
+            <td>{{track.duration}}</td>
           </tr>
           {{/each}}
         </tbody>

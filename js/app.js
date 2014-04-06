@@ -23,6 +23,14 @@ Mops.model = {
 }
 
 Mops.Track = Ember.Object.extend({
+  getActive: function(){
+      var state = this.get("state");
+      if (state == "playing" || state == "paused"){
+        return "active";
+      } else {
+        return "";
+      }
+  }.property("state")
 });
 
 Mops.Router.map(function() {
