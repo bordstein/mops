@@ -87,7 +87,7 @@
         </thead>
         <tbody class="tracklist">
           {{#each track in tracklist}}
-          <tr {{bind-attr class="track.getActive"}}>
+          <tr {{bind-attr class="track.getActive"}} {{action "play" track on="doubleClick"}}>
             <td><div class="playicon-wrapper">{{get_playicon track.state}}</div></td>
             <td>{{track.title}}</td>
             <td>{{track.artist}}</td>

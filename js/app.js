@@ -191,3 +191,12 @@ Mops.mopidy.on("event:trackPlaybackEnded", function(data){
 Mops.mopidy.on("event:tracklistChanged", function(){
   Ember.run.debounce(Mops.debounceContext, Mops.updateTracks, 1000);
 });
+
+
+Mops.TracklistController = Ember.ObjectController.extend({
+  actions: {
+    play: function(track) {
+      Mops.mopidy.playback.changeTrack(track.get("mopidyTrack"));
+    }
+  }
+});
