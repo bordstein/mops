@@ -20,6 +20,21 @@ Mops.model = {
 }
 
 Mops.Track = Ember.Object.extend({
+  artist: function(){
+    return this.get("mopidyTrack").track.artists[0].name;
+  }.property("mopidyTrack"),
+  title: function(){
+    return this.get("mopidyTrack").track.name;
+  }.property("mopidyTrack"),
+  album: function(){
+    return this.get("mopidyTrack").track.album.name;
+  }.property("mopidyTrack"),
+  duration: function(){
+    return Mops.millisecondsToTime(this.get("mopidyTrack").track.length);
+  }.property("mopidyTrack"),
+  album_mbid: function(){
+    return this.get("mopidyTrack").track.album.musicbrainz_id;
+  }.property("mopidyTrack"),
   getActive: function(){
       var state = this.get("state");
       if (state == "playing" || state == "paused"){
@@ -100,17 +115,16 @@ Mops.updateTracks = function(){
         // update items in-place to avoid browser reflow
         // and loosing scroll position
         for (var i=0; i<tracklist.length; i++) { 
-          var track = tracklist[i].track;
-          var tlid = tracklist[i].tlid;
-          var tmp = Mops.trackify(track);
+          var track = tracklist[i];
+          var tlid = track.tlid;
+          var tmp = Mops.Track.create({
+              mopidyTrack: track,
+              state: ""
+          });
           if (i < Mops.model.tracklist.length){
             var flip = Mops.model.tracklist.objectAt(i);
-            flip.set("artist", tmp.artist);
-            flip.set("title", tmp.title);
-            flip.set("album", tmp.album);
-            flip.set("state", tmp.state);
-            flip.set("duration", tmp.duration);
-            flip.set("album_mbid", tmp.album_mbid);
+            flip.set("mopidyTrack", track);
+            flip.set("state", tmp.get("state"));
             Mops.model.tlid_links[tlid] = flip;
           } else {
             Mops.model.tracklist.addObject(tmp);
